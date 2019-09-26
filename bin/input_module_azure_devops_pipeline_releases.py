@@ -40,7 +40,7 @@ def collect_events(helper, ew):
     # REST Endpoint for All Projects Under the Organization
     endpoint_projects = 'https://dev.azure.com/' + opt_organization + '/_apis/projects'
 
-    url_projects = endpoint_projects  + api_version
+    url_projects = endpoint_projects + api_version
 
     # HTTP GET
     response_projects = requests.get(url_projects, headers=headers)
@@ -52,6 +52,13 @@ def collect_events(helper, ew):
 
     # Store Response as a JSON Dict Object
     projects = response_projects.json()
+
+     # Serialize the JSON Dict Object
+    data_projects = json.dumps(projects)
+
+    # Save and Write the Serialized Object
+    event = helper.new_event(data_projects, time=datetime.now(), host='https://vsrm.dev.azure.com', index=opt_index_name, source=opt_organization, sourcetype=opt_sourcetype_name, done=True, unbroken=True)
+    ew.write_event(event)
 
     # Loop Through the Projects Under the Organization
     for project in projects["value"]:
@@ -70,6 +77,13 @@ def collect_events(helper, ew):
 
             # Store Response as a JSON Dict Object
             release_definitions = response_release_definitions.json()
+
+            # Serialize the JSON Dict Object
+            data_release_definitions = json.dumps(release_definitions)
+
+            # Save and Write the Serialized Object
+            event = helper.new_event(data_release_definitions, time=datetime.now(), host='https://vsrm.dev.azure.com', index=opt_index_name, source=opt_organization + ':' + project_name, sourcetype=opt_sourcetype_name, done=True, unbroken=True)
+            ew.write_event(event)
 
         except:
             # HTTP GET Request Error Handling
