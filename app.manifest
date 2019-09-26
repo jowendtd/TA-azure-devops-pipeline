@@ -5,7 +5,7 @@
     "id": {
       "group": null,
       "name": "TA-azure-devops-pipeline",
-      "version": "1.0.1"
+      "version": "1.1.0"
     },
     "author": [
       {
@@ -15,7 +15,7 @@
       }
     ],
     "releaseDate": null,
-    "description": "",
+    "description": "The Azure DevOps Pipeline Add-On gathers project and release data from Azure DevOps pipelines.  This add-on uses the name of the DevOps organization and a personal access token to pull data from the Azure DevOps API.",
     "classification": {
       "intendedAudience": null,
       "categories": [],
