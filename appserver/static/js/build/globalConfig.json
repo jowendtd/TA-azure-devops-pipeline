@@ -8,59 +8,6 @@
     }, 
     "pages": {
         "inputs": {
-            "table": {
-                "header": [
-                    {
-                        "field": "name", 
-                        "label": "Name"
-                    }, 
-                    {
-                        "field": "interval", 
-                        "label": "Interval"
-                    }, 
-                    {
-                        "field": "index", 
-                        "label": "Index"
-                    }, 
-                    {
-                        "field": "disabled", 
-                        "label": "Status"
-                    }
-                ], 
-                "moreInfo": [
-                    {
-                        "field": "name", 
-                        "label": "Name"
-                    }, 
-                    {
-                        "field": "interval", 
-                        "label": "Interval"
-                    }, 
-                    {
-                        "field": "index", 
-                        "label": "Index"
-                    }, 
-                    {
-                        "field": "disabled", 
-                        "label": "Status"
-                    }, 
-                    {
-                        "field": "organization", 
-                        "label": "Organization"
-                    }, 
-                    {
-                        "field": "personal_access_token", 
-                        "label": "Personal Access Token"
-                    }
-                ], 
-                "actions": [
-                    "edit", 
-                    "enable", 
-                    "delete", 
-                    "clone"
-                ]
-            }, 
-            "title": "Inputs", 
             "services": [
                 {
                     "entity": [
