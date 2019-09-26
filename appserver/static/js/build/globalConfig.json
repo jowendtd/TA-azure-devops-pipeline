@@ -1,109 +1,25 @@
 {
-    "meta": {
-        "apiVersion": "3.0.0", 
-        "restRoot": "TA_azure_devops_pipeline", 
-        "name": "TA-azure-devops-pipeline", 
-        "displayName": "Azure DevOps Pipeline Add-On", 
-        "version": "1.0.0"
-    }, 
     "pages": {
         "inputs": {
-            "services": [
-                {
-                    "name": "azure_devops_pipeline_releases", 
-                    "title": "Azure DevOps Pipeline Releases", 
-                    "entity": [
-                        {
-                            "validators": [
-                                {
-                                    "pattern": "^[a-zA-Z]\\w*$", 
-                                    "type": "regex", 
-                                    "errorMsg": "Input Name must start with a letter and followed by alphabetic letters, digits or underscores."
-                                }, 
-                                {
-                                    "minLength": 1, 
-                                    "errorMsg": "Length of input name should be between 1 and 100", 
-                                    "type": "string", 
-                                    "maxLength": 100
-                                }
-                            ], 
-                            "type": "text", 
-                            "help": "Enter a unique name for the data input", 
-                            "label": "Name", 
-                            "required": true, 
-                            "field": "name"
-                        }, 
-                        {
-                            "validators": [
-                                {
-                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$", 
-                                    "type": "regex", 
-                                    "errorMsg": "Interval must be an integer."
-                                }
-                            ], 
-                            "type": "text", 
-                            "help": "Time interval of input in seconds.", 
-                            "label": "Interval", 
-                            "required": true, 
-                            "field": "interval"
-                        }, 
-                        {
-                            "defaultValue": "default", 
-                            "options": {
-                                "blackList": "^_.*$", 
-                                "endpointUrl": "data/indexes", 
-                                "createSearchChoice": true
-                            }, 
-                            "type": "singleSelect", 
-                            "label": "Index", 
-                            "required": true, 
-                            "validators": [
-                                {
-                                    "minLength": 1, 
-                                    "errorMsg": "Length of index name should be between 1 and 80.", 
-                                    "type": "string", 
-                                    "maxLength": 80
-                                }
-                            ], 
-                            "field": "index"
-                        }, 
-                        {
-                            "validators": [
-                                {
-                                    "minLength": 0, 
-                                    "errorMsg": "Max length of text input is 8192", 
-                                    "type": "string", 
-                                    "maxLength": 8192
-                                }
-                            ], 
-                            "type": "text", 
-                            "help": "", 
-                            "label": "Organization", 
-                            "required": true, 
-                            "field": "organization"
-                        }, 
-                        {
-                            "validators": [
-                                {
-                                    "minLength": 0, 
-                                    "errorMsg": "Max length of password is 8192", 
-                                    "type": "string", 
-                                    "maxLength": 8192
-                                }
-                            ], 
-                            "type": "text", 
-                            "help": "https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops", 
-                            "label": "Personal Access Token", 
-                            "field": "personal_access_token", 
-                            "required": true, 
-                            "encrypted": true
-                        }
-                    ]
-                }
-            ], 
-            "title": "Inputs", 
-            "description": "Manage your data inputs", 
             "table": {
+                "header": [
+                    {
+                        "field": "name", 
+                        "label": "Name"
+                    }, 
+                    {
+                        "field": "interval", 
+                        "label": "Interval"
+                    }, 
+                    {
+                        "field": "index", 
+                        "label": "Index"
+                    }, 
+                    {
+                        "field": "disabled", 
+                        "label": "Status"
+                    }
+                ], 
                 "moreInfo": [
                     {
                         "field": "name", 
@@ -130,74 +46,158 @@
                         "label": "Personal Access Token"
                     }
                 ], 
-                "header": [
-                    {
-                        "field": "name", 
-                        "label": "Name"
-                    }, 
-                    {
-                        "field": "interval", 
-                        "label": "Interval"
-                    }, 
-                    {
-                        "field": "index", 
-                        "label": "Index"
-                    }, 
-                    {
-                        "field": "disabled", 
-                        "label": "Status"
-                    }
-                ], 
                 "actions": [
                     "edit", 
                     "enable", 
                     "delete", 
                     "clone"
                 ]
-            }
+            }, 
+            "title": "Inputs", 
+            "services": [
+                {
+                    "title": "Azure DevOps Pipeline Releases", 
+                    "entity": [
+                        {
+                            "field": "name", 
+                            "label": "Name", 
+                            "type": "text", 
+                            "validators": [
+                                {
+                                    "errorMsg": "Input Name must start with a letter and followed by alphabetic letters, digits or underscores.", 
+                                    "type": "regex", 
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                }, 
+                                {
+                                    "maxLength": 100, 
+                                    "errorMsg": "Length of input name should be between 1 and 100", 
+                                    "type": "string", 
+                                    "minLength": 1
+                                }
+                            ], 
+                            "required": true, 
+                            "help": "Enter a unique name for the data input"
+                        }, 
+                        {
+                            "field": "interval", 
+                            "label": "Interval", 
+                            "type": "text", 
+                            "validators": [
+                                {
+                                    "errorMsg": "Interval must be an integer.", 
+                                    "type": "regex", 
+                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$"
+                                }
+                            ], 
+                            "required": true, 
+                            "help": "Time interval of input in seconds."
+                        }, 
+                        {
+                            "options": {
+                                "createSearchChoice": true, 
+                                "blackList": "^_.*$", 
+                                "endpointUrl": "data/indexes"
+                            }, 
+                            "defaultValue": "default", 
+                            "label": "Index", 
+                            "type": "singleSelect", 
+                            "validators": [
+                                {
+                                    "maxLength": 80, 
+                                    "errorMsg": "Length of index name should be between 1 and 80.", 
+                                    "type": "string", 
+                                    "minLength": 1
+                                }
+                            ], 
+                            "required": true, 
+                            "field": "index"
+                        }, 
+                        {
+                            "field": "organization", 
+                            "label": "Organization", 
+                            "type": "text", 
+                            "validators": [
+                                {
+                                    "maxLength": 8192, 
+                                    "errorMsg": "Max length of text input is 8192", 
+                                    "type": "string", 
+                                    "minLength": 0
+                                }
+                            ], 
+                            "required": true, 
+                            "help": ""
+                        }, 
+                        {
+                            "field": "personal_access_token", 
+                            "label": "Personal Access Token", 
+                            "type": "text", 
+                            "validators": [
+                                {
+                                    "maxLength": 8192, 
+                                    "errorMsg": "Max length of password is 8192", 
+                                    "type": "string", 
+                                    "minLength": 0
+                                }
+                            ], 
+                            "required": true, 
+                            "help": "https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops", 
+                            "encrypted": true
+                        }
+                    ], 
+                    "name": "azure_devops_pipeline_releases"
+                }
+            ], 
+            "description": "Manage your data inputs"
         }, 
         "configuration": {
             "title": "Configuration", 
-            "description": "Set up your add-on", 
             "tabs": [
                 {
-                    "name": "logging", 
                     "title": "Logging", 
                     "entity": [
                         {
                             "options": {
-                                "disableSearch": true, 
                                 "autoCompleteFields": [
                                     {
-                                        "value": "DEBUG", 
-                                        "label": "DEBUG"
+                                        "label": "DEBUG", 
+                                        "value": "DEBUG"
                                     }, 
                                     {
-                                        "value": "INFO", 
-                                        "label": "INFO"
+                                        "label": "INFO", 
+                                        "value": "INFO"
                                     }, 
                                     {
-                                        "value": "WARNING", 
-                                        "label": "WARNING"
+                                        "label": "WARNING", 
+                                        "value": "WARNING"
                                     }, 
                                     {
-                                        "value": "ERROR", 
-                                        "label": "ERROR"
+                                        "label": "ERROR", 
+                                        "value": "ERROR"
                                     }, 
                                     {
-                                        "value": "CRITICAL", 
-                                        "label": "CRITICAL"
+                                        "label": "CRITICAL", 
+                                        "value": "CRITICAL"
                                     }
-                                ]
+                                ], 
+                                "disableSearch": true
                             }, 
-                            "defaultValue": "INFO", 
                             "field": "loglevel", 
-                            "type": "singleSelect", 
-                            "label": "Log level"
+                            "defaultValue": "INFO", 
+                            "label": "Log level", 
+                            "type": "singleSelect"
                         }
-                    ]
+                    ], 
+                    "name": "logging"
                 }
-            ]
+            ], 
+            "description": "Set up your add-on"
         }
+    }, 
+    "meta": {
+        "version": "1.0.0", 
+        "displayName": "Azure DevOps Pipeline Add-On", 
+        "name": "TA-azure-devops-pipeline", 
+        "restRoot": "TA_azure_devops_pipeline", 
+        "apiVersion": "3.0.0"
     }
 }

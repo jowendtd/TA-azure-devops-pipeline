@@ -9,11 +9,13 @@ from pprint import pprint
 from datetime import datetime
 
 def validate_input(helper, definition):
-    """Implement your own validation logic to validate the input stanza configurations"""
-    # This example accesses the modular input variable
-    # organization = definition.parameters.get('organization', None)
-    # personal_access_token = definition.parameters.get('personal_access_token', None)
-    pass
+    organization = definition.parameters.get('organization', None)
+    personal_access_token = definition.parameters.get('personal_access_token', None)
+
+    if (not organization) and (not personal_access_token):
+        pass
+    else:
+        helper.log_critical("Invalid Organization or PAT")
 
 def collect_events(helper, ew):
 
@@ -28,8 +30,6 @@ def collect_events(helper, ew):
     # Base64 Encode the Personal Access Token
     encoded_pat = base64.b64encode(":".encode("UTF-8") + opt_personal_access_token.encode("UTF-8"))
 
-    helper.log_debug("Encoded PAT: " + encoded_pat)
-    
     # Set the Header Authentication String
     api_authorization = 'Basic ' + encoded_pat.decode("UTF-8")
 
@@ -67,18 +67,17 @@ def collect_events(helper, ew):
         try:
             # HTTP GET
             response_release_definitions = requests.get(url_release_definitions, headers=headers)
+
+            # Store Response as a JSON Dict Object
+            release_definitions = response_release_definitions.json()
+
         except:
             # HTTP GET Request Error Handling
-            print('Status Code {}'.format(response_release_releases.status_code))
+            helper.log_error('Status Code :' + response_release_releases.status_code)
 
-        # Store Response as a JSON Dict Object
-        release_definitions = response_release_definitions.json()
-    
         # Loop Through the Release Definitions Under Each Project
         for release_definition in release_definitions["value"]:
             
-            ## print("Project Name", project_name, "Release Name: ", release_definition["name"], "Release ID: ", release_definition["id"])
-
             # REST Endpoint for All Release Definitions Under the Organization
             endpoint_release_releases = 'https://vsrm.dev.azure.com/' + opt_organization + '/' + project_name + '/_apis/release/releases'
 
@@ -91,12 +90,22 @@ def collect_events(helper, ew):
 
                 # Store Response as a JSON Dict Object
                 release_releases = response_release_releases.json()
+
             except:
                 # HTTP GET Request Error Handling
-                print('Status Code {}'.format(response_release_releases.status_code))
+                helper.log_error('Status Code: ' + response_release_releases.status_code)
+            
+            try:
+                releaseId = release_releases["id"]
 
-            data_release_releases = json.dumps(release_releases)
+                # Serialize the JSON Dict Object
+                data_release_releases = json.dumps(release_releases)
 
-            event = helper.new_event(data_release_releases, time=datetime.now(), host='https://vsrm.dev.azure.com', index=opt_index_name, source=project_name + ':' + release_definition["name"], sourcetype=opt_sourcetype_name, done=True, unbroken=True)
+                # Save and Write the Serialized Object
+                event = helper.new_event(data_release_releases, time=datetime.now(), host='https://vsrm.dev.azure.com', index=opt_index_name, source=project_name + ':' + release_definition["name"], sourcetype=opt_sourcetype_name, done=True, unbroken=True)
+                ew.write_event(event)
 
-            ew.write_event(event)
+            except:
+                # HTTP GET Request Error Handling
+                helper.log_error('Exception :' + release_releases["message"])
+                helper.log_error('Exception :' + release_releases["typeName"])
