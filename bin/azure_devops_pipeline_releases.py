@@ -51,7 +51,7 @@ class ModInputazure_devops_pipeline_releases(modinput_wrapper.base_modinput.Base
                                          required_on_create=True,
                                          required_on_edit=False))
         scheme.add_argument(smi.Argument("personal_access_token", title="Personal Access Token",
-                                         description="https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops",
+                                         description="",
                                          required_on_create=True,
                                          required_on_edit=False))
         return scheme
